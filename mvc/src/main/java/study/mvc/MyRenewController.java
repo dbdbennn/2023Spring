@@ -1,10 +1,21 @@
 package study.mvc;
 
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 // @Controller
 @RestController
@@ -27,4 +38,88 @@ public class MyRenewController {
         // Content-Type 헤더의 경우 produces 옵션을 제공하여 미디어 타입 지정 가능
         return bytesToString;
     }
+
+    @GetMapping(value = "/hello-html", produces = MediaType.TEXT_HTML_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public String helloHTML() {
+        return "<h1>Hello</h1>";
+    }
+
+    @GetMapping(value = "/hello-xml", produces = MediaType.TEXT_XML_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public String helloXML() {
+        return "<text>Hello</text>";
+    }
+
+    @GetMapping(value = "/hello-json")
+    @ResponseStatus(HttpStatus.OK)
+    public String helloJSON() {
+        return "{ \"data\": \"hello\" }";
+    }
+
+    @GetMapping(value = "/echo-repeat", produces = MediaType.TEXT_PLAIN_VALUE)
+    // @RequestHeader 어노테이션을 통해서 X-Repeat-Count에 적힌 숫자 정보 가져오고 없으면 1로 초기화
+    public String echoRepeat(@RequestParam("word") String word, @RequestHeader(value = "X-Repeat-Count", defaultValue = "1") Integer repeatCount) throws IOException {
+        String result = "";
+        for(int i=0;i<repeatCount;i++) {
+            result += word;
+        }
+        return result;
+    }
+
+    @GetMapping(value = "/dog-image", produces = MediaType.IMAGE_JPEG_VALUE)
+    public byte[] dogImage() throws IOException {
+        // resources 폴더의 static 폴더에 이미지 있어야 함
+        File file = ResourceUtils.getFile("classpath:static/dog.jpg");
+        // 파일의 바이트 데이터 모두 읽어오기
+        byte[] bytes = Files.readAllBytes(file.toPath());
+
+        return bytes;
+    }
+
+    @GetMapping(value = "/dog-image-file", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+// 헤더를 직접 조정하고 싶은 경우 ResponseEntity 타입을 반환하도록 설정 가능
+// (꺽쇠 안에는 응답 메시지의 바디 데이터에 포함될 타입을 지정)
+    public ResponseEntity<byte[]> dogImageFile() throws IOException {
+        File file = ResourceUtils.getFile("classpath:static/dog.jpg");
+        byte[] bytes = Files.readAllBytes(file.toPath());
+
+        String filename = "dog.jpg";
+        // 헤더 값 설정
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "attachment; filename=" + filename);
+
+        return new ResponseEntity<>(bytes, headers, HttpStatus.OK);
+    }
+
+    private ArrayList<String> wordList = new ArrayList<>();
+
+    // Q1) 위의 ArrayList에 단어를 추가하는 메서드, 스프링답게 핸들러 메서드 만들어보기
+    @PostMapping(value = "/words", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public void addWord(@RequestBody String requestBody) {
+        String[] words = requestBody.split("\n");
+        for(String w : words) wordList.add(w.trim());
+    }
+
+    // Q2) 저장된 모든 단어 보여주기 메서드, 스프링답게 핸들러 메서드 만들어보기
+    @GetMapping(value = "/words", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public ResponseEntity<String> showWord() {
+        String allWords = String.join(", ", wordList);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Location", "/words");
+
+        return new ResponseEntity<>(allWords, headers, HttpStatus.OK);
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
