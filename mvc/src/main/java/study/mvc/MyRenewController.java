@@ -1,16 +1,15 @@
 package study.mvc;
 
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -126,6 +125,31 @@ public class MyRenewController {
     public MyJsonData jsonTest(@RequestBody MyJsonData myJsonData) {
         System.out.println(myJsonData);
         return myJsonData;
+    }
+
+    @PostMapping(value = "/student-test",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    // 반환 타입으로 MyJsonData를 설정하였고 ResponseBody 어노테이션을 통해 해당 값이 메시지 컨버터를 통해서 직렬화되어야 함을 알림
+    @ResponseBody
+    public MyStudentData studentTest(@RequestBody MyStudentData myStudentData){
+        System.out.println(myStudentData);
+        return myStudentData;
+    }
+
+    @GetMapping(value = "/github/{user}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public String githubuser(@PathVariable("user") String user) {
+        RestTemplate restTemplate = new RestTemplate();
+
+        // 요청 메시지 생성 및 설정
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        RequestEntity<String> requestEntity = new RequestEntity<>(
+                null, null, HttpMethod.GET, URI.create("https://api.github.com/users/" + user));
+
+        ResponseEntity<String> response = restTemplate.exchange(requestEntity, String.class);
+
+        return response.getBody();
     }
 }
 
