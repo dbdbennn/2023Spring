@@ -95,21 +95,37 @@ public class MyRenewController {
     private ArrayList<String> wordList = new ArrayList<>();
 
     // Q1) 위의 ArrayList에 단어를 추가하는 메서드, 스프링답게 핸들러 메서드 만들어보기
-    @PostMapping(value = "/words", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public void addWord(@RequestBody String requestBody) {
-        String[] words = requestBody.split("\n");
-        for(String w : words) wordList.add(w.trim());
+    @PostMapping(value = "/words", produces = MediaType.TEXT_PLAIN_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
+    public void addWords(@RequestBody String bodyString) {
+        String[] words = bodyString.split("\n");
+        for (String w : words) wordList.add(w.trim());
     }
 
     // Q2) 저장된 모든 단어 보여주기 메서드, 스프링답게 핸들러 메서드 만들어보기
-    @GetMapping(value = "/words", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public ResponseEntity<String> showWord() {
+    @GetMapping(value = "/words", produces = MediaType.TEXT_PLAIN_VALUE)
+    public String showWords(){
         String allWords = String.join(", ", wordList);
+        return allWords;
+    }
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Location", "/words");
+    @PostMapping("/test")
+    // @ModelAttribute를 타입 앞에 붙여주고 메서드의 파라미터 값으로 전달되게 함
+    public String commandObjectTest(@ModelAttribute MyCommandObject myCommandObject) {
+        return myCommandObject.toString();
+    }
 
-        return new ResponseEntity<>(allWords, headers, HttpStatus.OK);
+    // 요청 메시지의 Content-Type이 "applicaion/json"인 요청을 받아들이기 위해서 consumes를 MediaType.APPLICATION_JSON_VALUE로 설정
+    // 응답 메시지의 Content-Type이 "applicaion/json"이므로 produces를 MediaType.APPLICATION_JSON_VALUE로 설정
+    @PostMapping(value = "/json-test",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    // 반환 타입으로 MyJsonData를 설정하였고 ResponseBody 어노테이션을 통해 해당 값이 메시지 컨버터를 통해서 직렬화되어야 함을 알림
+    @ResponseBody
+    // RequestBody 어노테이션을 통해 요청 메시지의 바디에 포함된 JSON 문자열이 메시지 컨버터를 통해서 역직렬화되어 객체로 변환되어야 함을 알림
+    public MyJsonData jsonTest(@RequestBody MyJsonData myJsonData) {
+        System.out.println(myJsonData);
+        return myJsonData;
     }
 }
 
