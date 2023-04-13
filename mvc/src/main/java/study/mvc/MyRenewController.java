@@ -151,6 +151,19 @@ public class MyRenewController {
 
         return response.getBody();
     }
+
+    @GetMapping(value = "/kanye", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Kanye kanye() {
+        RestTemplate restTemplate = new RestTemplate();
+
+        // 요청 메시지 생성 및 설정
+        RequestEntity<String> requestEntity = new RequestEntity<>(
+                null, null, HttpMethod.GET, URI.create("https://api.kanye.rest/"));
+
+        ResponseEntity<Kanye> response = restTemplate.exchange(requestEntity, Kanye.class);
+
+        return response.getBody();
+    }
 }
 
 
