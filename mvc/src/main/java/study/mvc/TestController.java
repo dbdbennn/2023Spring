@@ -4,6 +4,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/test")
 public class TestController {
@@ -59,4 +62,36 @@ public class TestController {
         return "" + (++counter);
     }
 
+    @GetMapping(value = "/result_test", produces = MediaType.APPLICATION_JSON_VALUE)
+    public SuccessResult resultTest() {
+        return new SuccessResult();
+    }
+
+    @GetMapping(value = "/result_test2", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Result resultTest2(){
+        Result result = new Result();
+        result.result = "success";
+        result.code = 1000;
+
+        return result;
+    }
+
+    @GetMapping(value = "/result_test3", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String, Object> resultTest3() {
+        Map<String, Object> result = new HashMap<>();
+        result.put("result", "success");
+        result.put("code", 1000);
+
+        return result;
+    }
+
+}
+
+class SuccessResult{
+    public String result = "success";
+}
+
+class Result{
+    public String result;
+    public Integer code;
 }
