@@ -4,6 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -81,6 +83,19 @@ public class TestController {
         Map<String, Object> result = new HashMap<>();
         result.put("result", "success");
         result.put("code", 1000);
+
+        return result;
+    }
+
+    @GetMapping(value = "/now", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String, Object> now() {
+        Map<String, Object> result = new HashMap<>();
+        Date now = new Date();
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
+
+        result.put("date", sdf1.format(now));
+        result.put("time", sdf2.format(now));
 
         return result;
     }
