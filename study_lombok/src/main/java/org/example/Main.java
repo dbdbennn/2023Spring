@@ -48,8 +48,7 @@ class MyClass implements Serializable { // 조건 3
 
 @Builder
 @Data
-@NoArgsConstructor @RequiredArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor @RequiredArgsConstructor @AllArgsConstructor
 class MyClass implements Serializable {
     @NonNull private String value1;
     private Integer value2;
