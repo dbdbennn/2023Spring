@@ -1,0 +1,48 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <h1 th:text="${value1}"></h1>
+    <p th:text="${value2}">Hello World!</p>
+    <p th:text="${value2.replace('Hello', 'Jello')}">Hello World!</p>
+
+    <!-- 객체 접근 -->
+    <!-- 실제로는 정보를 가져오기 위해서 필드를 접근하지 않고 게터 메소드(getName) 호출 -->
+    <!-- (클래스에 게터 메서드가 없으면 오류가 나게 됨을 유의) -->
+    <span th:text="${mybook.name}"></span><br />
+    <!-- 대괄호 써서도 접근 가능 -->
+    <span th:text="${mybook['name']}"></span><br />
+    <!-- + 연산자 이용하여 뒤에 "원" 붙이기 -->
+    <span th:text="${mybook.price} + '원'"></span><br />
+    <span th:text="'할인가: ' + ${mybook.price*0.8} + ' 원'"></span><br />
+    <!-- 바 기호(|)를 사용하여 내부에 텍스트 자유롭게 삽입 가능 (권장) -->
+    <span th:text="|할인가: ${mybook.price*0.8} 원|"></span><br />
+    <!-- 실제로는 다음과 같이 메소드 호출 => mybook.getAuthor().getName() -->
+    <span th:text="${mybook.author.name}"></span><br />
+
+    <!-- 객체 접근(*를 사용한 Selection expressions) -->
+    <!-- th:object 속성을 통해서 mybook이 선택(select)된 상황 -->
+    <div th:object="${mybook}">
+        <h2>책 정보</h2>
+        <!-- th:object가 포함된 태그 내부의 자식 태그에서는 mybook.name이라고 안 쓰고 *{name}으로 mybook.name 접근 가능(선택된 객체에 접근한다는 개념) -->
+        <span>저자명 : </span><span th:text="*{name}"></span><br />
+        <span>가격 : </span><span th:text="*{price}"></span><br />
+        <span>저자명 : </span><span th:text="*{author.name}"></span><br />
+    </div>
+
+
+    <!-- (여기서는 value1의 값이 1234라고 가정) -->
+    <!-- 링크 표현은 앳(@)기호와 중괄호를 이용하여 표현 (ex: @{/path}) -->
+    <!-- th:href, th:action -->
+    <!-- 생성 URL : /template2 -->
+    <a th:href="@{/template2}">template2</a><br />
+    <!-- 생성 URL : /template2?param1=1234 -->
+    <a th:href="@{/template2(param1=1234)}">template2 with static param</a><br />
+    <!-- 생성 URL : /template2?param1=1234 -->
+    <a th:href="@{/template2(param1=${value1})}">template2 with variable param</a><br />
+    <!-- 생성 URL : /template2/1234?param1=1234 -->
+    <!-- 링크에 있는 {id}는 마치 path variable처럼 사용됨 -->
+    <a th:href="@{/template2/{id}(id=${value1}, param1=${value1})}">template2 with path variable and param</a><br />
+    <form th:action="@{/action}">
+        <input type="submit" />
+    </form>
+</body>
+</html>

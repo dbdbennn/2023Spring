@@ -1,0 +1,22 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+  <!-- th:if, th:unless -->
+  <!-- 참, 거짓 여부에 따라서 해당 요소를 보여줄지 말지(display: none;을 한다는 것이 아니고 아예 문서에 포함 자체를 안함) 결정 -->
+  <div th:if="${condition1} == true" style="width:200px; height:200px; background: red;">true</div>
+  <div th:if="${condition2}" style="width:200px; height:200px; background: red;">false</div>
+
+  <div th:object="${book}">
+    <h1 th:text="*{name}"></h1>
+    <!-- if -->
+    <div th:if="*{sale}">
+      <p>현재 할인 판매중인 상품입니다. 할인률은 <span th:text="*{saleAmount * 100}"></span>%이고 가격은 <span th:text="*{price - (price * saleAmount)}"></span>입니다.</p>
+    </div>
+    <!-- else -->
+    <!-- true와의 비교는 불필요 -->
+    <div th:unless="*{sale}">
+      <p>현재 정가 판매중인 상품입니다. 가격은 <span th:text="*{price}"></span>입니다.</p>
+    </div>
+  </div>
+</body>
+</html>
