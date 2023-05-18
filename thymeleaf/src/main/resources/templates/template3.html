@@ -18,5 +18,14 @@
       <p>현재 정가 판매중인 상품입니다. 가격은 <span th:text="*{price}"></span>입니다.</p>
     </div>
   </div>
+  <!-- switch – case 구문 -->
+  <!-- th:switch, th:case -->
+  <div th:switch="${grade}">
+    <p th:case="'A'">A grade</p>
+    <p th:case="'B'">B grade</p>
+    <p th:case="'C'">C grade</p>
+    <!-- *로 default case 잡아내기 -->
+    <p th:case="*">low grade</p>
+  </div>
 </body>
 </html>
