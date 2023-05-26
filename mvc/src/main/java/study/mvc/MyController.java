@@ -95,6 +95,10 @@ public class MyController {
     }
 
     @GetMapping("/echo-repeat")
+    // params
+    // key word, value hello
+    // headers
+    // x-repeat-count, value 2
     public void echoRepeat(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setStatus(200);
         response.setHeader("Content-Type", "text/plain");

@@ -110,7 +110,7 @@ public class MyRenewController {
 
     @PostMapping("/test")
     // @ModelAttribute를 타입 앞에 붙여주고 메서드의 파라미터 값으로 전달되게 함
-    public String commandObjectTest(@ModelAttribute MyCommandObject myCommandObject) {
+    public String cotmmandObjectTest(@ModelAttribute MyCommandObject myCommandObject) {
         return myCommandObject.toString();
     }
 
@@ -122,7 +122,7 @@ public class MyRenewController {
     // 반환 타입으로 MyJsonData를 설정하였고 ResponseBody 어노테이션을 통해 해당 값이 메시지 컨버터를 통해서 직렬화되어야 함을 알림
     @ResponseBody
     // RequestBody 어노테이션을 통해 요청 메시지의 바디에 포함된 JSON 문자열이 메시지 컨버터를 통해서 역직렬화되어 객체로 변환되어야 함을 알림
-    public MyJsonData jsonTest(@RequestBody MyJsonData myJsonData) {
+    public MyJsonData jsonTes(@RequestBody MyJsonData myJsonData) {
         System.out.println(myJsonData);
         return myJsonData;
     }
