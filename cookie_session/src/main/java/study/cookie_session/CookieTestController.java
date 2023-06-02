@@ -1,10 +1,9 @@
 package study.cookie_session;
 
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -28,4 +27,44 @@ public class CookieTestController {
 
         return "success";
     }
+
+    @GetMapping("/get_cookie_data")
+    public String getCookieData(
+            @CookieValue(value="data1", defaultValue="Hello") String data1,
+            @CookieValue(value="asdf", required=false) String asdf) {
+        return data1 + " " + asdf;
+    }
+
+
+    @GetMapping("/show_all_cookie_data")
+    public String showCookieData(HttpServletRequest request) {
+        String result = "no cookies";
+        // 요청 메시지를 통해 받은 모든 쿠키 객체 가져오기
+        Cookie[] cookies = request.getCookies();
+        // 저장된 쿠키가 하나도 없는 경우에는 빈 배열이 아니라 null을 반환함을 유의
+        if(cookies != null) {
+            result = "";
+            for(Cookie c : cookies) {
+                // 쿠키의 이름(=키)와 값을 모두 출력
+                result += c.getName() + " : " + c.getValue() + "\n";
+            }
+        }
+
+        return result.trim();
+    }
+    @DeleteMapping("/delete_all_cookie_data")
+    public String deleteAllCookieData(HttpServletRequest request, HttpServletResponse response) {
+        // 모든 쿠키 삭제
+        Cookie[] cookies = request.getCookies();
+        if(cookies != null) {
+            for(Cookie c : cookies) {
+                Cookie deleted = new Cookie(c.getName(), "");
+                deleted.setMaxAge(0); // 만료 기간을 0초로 설정
+                response.addCookie(deleted);
+            }
+        }
+
+        return "success";
+    }
+
 }
