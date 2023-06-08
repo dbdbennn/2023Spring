@@ -53,4 +53,9 @@ public class SessionTestController {
 
         return "success";
     }
+
+    @GetMapping("/page")
+    public String page() {
+        return "page";
+    }
 }
