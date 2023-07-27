@@ -7,6 +7,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 // 생성된 Bean 보관하는 창고 역할
 @SpringBootApplication
+@ComponentScan("com.example.demo")
 public class DemoApplication {
 
 	public static void main(String[] args) {

@@ -28,6 +28,7 @@ public class MyController {
     }
 
     @GetMapping("/echo")
+    // 요청 메시지 정보에 접근하기 위해서 HttpServletRequest 타입의 객체를 메서드로 전달받을 수 있음
     public void echo(HttpServletRequest request,
                       HttpServletResponse response) throws IOException {
         String method = request.getMethod();
@@ -36,8 +37,9 @@ public class MyController {
         String uri = request.getRequestURI();
         System.out.println("URI : "+uri);
 
+        // body
         String queryString = request.getQueryString();
-        System.out.println("query string : "+queryString); // url에서 ?뒷부분
+        System.out.println("query string : "+queryString);
 
 //        HashMap<String, String> map = new HashMap<>();
 //        String[] parts = queryString.split("&");
@@ -132,7 +134,7 @@ public class MyController {
         response.setStatus(200);
         // 응답 메시지의 데이터가 JPEG 압축 이미지임을 설정
         response.setHeader("Content-Type", "image/jpeg");
-        // 바이트 데이터 쓰기 (여기서는 텍스트 데이터를 전송하지 않기 떄문에 Writer 대신 OutputStream을 이용)
+        // 바이트 데이터 쓰기 (여기서는 텍스트 데이터를 전송하지 않기 떄문에 getWriter 대신 OutputStream을 이용)
         response.getOutputStream().write(bytes);
     }
 

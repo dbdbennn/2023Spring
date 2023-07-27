@@ -92,7 +92,7 @@ public class TestController {
         Map<String, Object> result = new HashMap<>();
         Date now = new Date();
         SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
-        SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm");
+        SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm:ss");
 
         result.put("date", sdf1.format(now));
         result.put("time", sdf2.format(now));
